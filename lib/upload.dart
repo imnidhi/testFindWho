@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,17 +14,28 @@ class _UploadState extends State<Upload> {
   var jsonData;
 
   Future uploadPhoto(File image) async {
-    String base64Image = base64Encode(image.readAsBytesSync());
-    print(base64Image);
-    String query = """
-            mutation{
-            uploadFile(fileIn:$image)
-           }
-                    """;
-    http.Response response = await http
-        .post("http://142.93.221.127:8000/graphql/", body: {'query': query});
-    jsonData = json.decode(response.body);
-    return jsonData;
+    print("Uploading");
+    final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('img2.jpg');
+    final StorageUploadTask task = firebaseStorageRef.putFile(image);
+    firebaseStorageRef.getDownloadURL().then((onValue){
+      print(onValue);
+          // String query = """
+    //         mutation{
+    //         uploadFile(fileIn:$image)
+    //        }
+    //                 """;
+    // http.Response response = await http
+    //     .post("http://142.93.221.127:8000/graphql/", body: {'query': query});
+    // jsonData = json.decode(response.body);
+    // return jsonData;
+    });
+
+    // firebaseStorageRef.child("findwho-f6d4e.appspot.com/img1.jpg").getDownloadURL().then((onValue){
+    //   print(onValue);
+    // });
+
+
+
   }
   File _image;
   Future getImage() async {
