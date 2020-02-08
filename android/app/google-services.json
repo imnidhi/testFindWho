@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "761880382079",
+    "firebase_url": "https://findwho-f6d4e.firebaseio.com",
+    "project_id": "findwho-f6d4e",
+    "storage_bucket": "findwho-f6d4e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761880382079:android:1e89647b64e080cb154d4a",
+        "android_client_info": {
+          "package_name": "com.example.find_who"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "761880382079-5emfar2svjolqt15cvgqqu7hshj1u6hu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.find_who",
+            "certificate_hash": "e1d67607e238288f02adb3da83b3c576d625cb00"
+          }
+        },
+        {
+          "client_id": "761880382079-g7gjd6pfe4elva7qntcheave85f3clto.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD25slgu3OBQf71HQCZ49MBMql6WDMmvoo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "761880382079-g7gjd6pfe4elva7qntcheave85f3clto.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
