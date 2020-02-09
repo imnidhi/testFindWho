@@ -4,6 +4,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'Error.dart';
+import 'Success.dart';
 
 class Upload extends StatefulWidget {
   @override
@@ -12,34 +14,55 @@ class Upload extends StatefulWidget {
 
 class _UploadState extends State<Upload> {
   var jsonData;
-
+bool show_loading = false;
   Future uploadPhoto(File image) async {
     print("Uploading");
-    final StorageReference firebaseStorageRef = FirebaseStorage.instance.ref().child('img2.jpg');
+    String image1 = image.toString();
+    List a = image1.split("/");
+    String name = a[a.length - 1];
+    final StorageReference firebaseStorageRef =
+        FirebaseStorage.instance.ref().child('$name.jpg');
     final StorageUploadTask task = firebaseStorageRef.putFile(image);
-    firebaseStorageRef.getDownloadURL().then((onValue){
-      print(onValue);
-          // String query = """
-    //         mutation{
-    //         uploadFile(fileIn:$image)
-    //        }
-    //                 """;
-    // http.Response response = await http
-    //     .post("http://142.93.221.127:8000/graphql/", body: {'query': query});
-    // jsonData = json.decode(response.body);
-    // return jsonData;
+        if(task.isInProgress){
+      setState(() {
+      show_loading = true;
+        
+      });
+    }
+    task.onComplete.then((onValue) async {
+      String url = await firebaseStorageRef.getDownloadURL();
+      print(url);
+      String query = """
+            mutation{
+            createFace(check:false,criminal:true,image:"$url"){
+              msg
+            }
+           }
+                    """;
+      http.Response response = await http
+          .post("http://142.93.221.127:8000/graphql/", body: {'query': query});
+      jsonData = json.decode(response.body);
+      print(jsonData);
+      // return jsonData;
+      if (jsonData["data"]["createFace"]["msg"] == "created") {
+        // Navigator.pushNamed(context, '/success');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Success("Image uploaded Successfully")),
+        );
+      } else {
+        Navigator.push(context,
+        MaterialPageRoute(
+            builder: (context) => Error("Image not uploaded. Try again!")),);
+      }
     });
-
-    // firebaseStorageRef.child("findwho-f6d4e.appspot.com/img1.jpg").getDownloadURL().then((onValue){
-    //   print(onValue);
-    // });
-
-
-
   }
+
   File _image;
   Future getImage() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    var image = await ImagePicker.pickImage(
+        source: ImageSource.camera, imageQuality: 10);
     setState(() {
       _image = image;
     });
